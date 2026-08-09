@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste de Notificação</title>
+</head>
+
+<body style="font-family: Arial; text-align: center; padding: 40px;">
+
+  <h1>💊 Teste de Notificação</h1>
+
+  <p id="status">Preparando teste...</p>
+
+  <button
+    id="botao"
+    style="font-size: 20px; padding: 15px 25px; margin-top: 20px;"
+  >
+    🔔 Testar notificação
+  </button>
+
+  <script>
+    const status = document.getElementById('status');
+    const botao = document.getElementById('botao');
+
+    async function preparar() {
+      if (!('serviceWorker' in navigator)) {
+        status.textContent = '❌ Este navegador não suporta notificações.';
+        return;
+      }
+
+      if (!('Notification' in window)) {
+        status.textContent = '❌ Notificações não são suportadas.';
+        return;
+      }
+
+      try {
+        await navigator.serviceWorker.register('/controle-remedios/sw.js');
+
+        await navigator.serviceWorker.ready;
+
+        status.textContent = '✅ Pronto! Toque no botão para testar.';
+      } catch (erro) {
+        console.error(erro);
+        status.textContent = '❌ Erro ao preparar a notificação.';
+      }
+    }
+
+    botao.addEventListener('click', async () => {
+      try {
+        if (Notification.permission !== 'granted') {
+          const permissao = await Notification.requestPermission();
+
+          if (permissao !== 'granted') {
+            status.textContent = '⚠️ Permissão para notificações não concedida.';
+            return;
+          }
+        }
+
+        const registro = await navigator.serviceWorker.ready;
+
+        registro.active.postMessage({
+          type: 'TEST_NOTIFICATION'
+        });
+
+        status.textContent = '✅ Comando enviado! Veja se apareceu a notificação.';
+      } catch (erro) {
+        console.error(erro);
+        status.textContent = '❌ Não foi possível enviar a notificação.';
+      }
+    });
+
+    preparar();
+  </script>
+
+</body>
+</html>
