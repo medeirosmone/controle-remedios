@@ -1,11 +1,71 @@
-self.addEventListener("install", () => {
-  self.skipWaiting();
-});
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste de Notificação</title>
+</head>
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
-});
+<body>
 
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-});
+  <h1>💊 Teste de Notificação</h1>
+
+  <p id="status">Preparando teste...</p>
+
+  <button id="botao">
+    🔔 Testar notificação
+  </button>
+
+  <script>
+    const status = document.getElementById("status");
+    const botao = document.getElementById("botao");
+
+    async function iniciar() {
+      try {
+        if (!("serviceWorker" in navigator)) {
+          throw new Error("Este navegador não suporta Service Worker.");
+        }
+
+        if (!("Notification" in window)) {
+          throw new Error("Este navegador não suporta notificações.");
+        }
+
+        const registro = await navigator.serviceWorker.register(
+          "/controle-remedios/sw.js"
+        );
+
+        await navigator.serviceWorker.ready;
+
+        status.textContent = "✅ Service Worker ativo. Pronto para testar.";
+
+        botao.onclick = async function () {
+
+          const permissao = await Notification.requestPermission();
+
+          if (permissao !== "granted") {
+            status.textContent = "❌ Permissão para notificações não autorizada.";
+            return;
+          }
+
+          const registroAtivo = await navigator.serviceWorker.ready;
+
+          await registroAtivo.showNotification("💊 Controle de Remédios", {
+            body: "🔔 Esta é uma notificação de teste!",
+            icon: "/controle-remedios/favicon.ico",
+            badge: "/controle-remedios/favicon.ico"
+          });
+
+          status.textContent = "✅ Notificação enviada!";
+        };
+
+      } catch (erro) {
+        console.error(erro);
+        status.textContent = "❌ Erro: " + erro.message;
+      }
+    }
+
+    iniciar();
+  </script>
+
+</body>
+</html>
