@@ -1,73 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste de Notificação</title>
-</head>
+self.addEventListener("install", () => {
+  self.skipWaiting();
+});
 
-<body style="font-family: Arial; text-align: center; padding: 40px;">
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
 
-  <h1>💊 Teste de Notificação</h1>
-
-  <p id="status">Pronto para testar.</p>
-
-  <button
-    id="botao"
-    style="font-size: 20px; padding: 15px 25px; margin-top: 20px;"
-  >
-    🔔 Testar notificação
-  </button>
-
-  <script>
-    const status = document.getElementById("status");
-    const botao = document.getElementById("botao");
-
-    botao.addEventListener("click", async () => {
-
-      try {
-        if (!("Notification" in window)) {
-          status.textContent = "❌ Este navegador não suporta notificações.";
-          return;
-        }
-
-        const permissao = await Notification.requestPermission();
-
-        if (permissao !== "granted") {
-          status.textContent = "❌ Permissão para notificações não foi concedida.";
-          return;
-        }
-
-        status.textContent = "✅ Permissão concedida! Enviando notificação...";
-
-        if ("serviceWorker" in navigator) {
-
-          const registro = await navigator.serviceWorker.register(
-            "/controle-remedios/sw.js"
-          );
-
-          await registro.showNotification("💊 Controle de Remédios", {
-            body: "🔔 A notificação está funcionando!",
-            icon: "/controle-remedios/favicon.ico",
-            badge: "/controle-remedios/favicon.ico"
-          });
-
-        } else {
-
-          new Notification("💊 Controle de Remédios", {
-            body: "🔔 A notificação está funcionando!"
-          });
-
-        }
-
-        status.textContent = "✅ Notificação enviada!";
-
-      } catch (erro) {
-        console.error(erro);
-        status.textContent = "❌ Erro: " + erro.message;
-      }
-    });
-  </script>
-
-</body>
-</html>
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+});
