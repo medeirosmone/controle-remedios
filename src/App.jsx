@@ -169,7 +169,98 @@ function App() {
       JSON.stringify(historico)
     )
   }, [historico])
+useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
 
+    navigator.serviceWorker
+      .register(${import.meta.env.BASE_URL}sw.js)
+      .catch((erro) => {
+        console.error(
+          "Erro ao registrar Service Worker:",
+          erro
+        );
+      });
+  }, []);
+
+  useEffect(() => {
+    const verificarHorarios = async () => {
+      if (!("serviceWorker" in navigator)) return;
+
+      if (
+        !("Notification" in window) ||
+        Notification.permission !== "granted"
+      ) {
+        return;
+      }
+
+      try {
+        const registro =
+          await navigator.serviceWorker.ready;
+
+        const agora = new Date();
+
+        const horaAtual =
+          String(agora.getHours()).padStart(2, "0") +
+          ":" +
+          String(agora.getMinutes()).padStart(2, "0");
+
+        const hoje = dataHoje();
+
+        medicamentos.forEach((med) => {
+          const horarios = gerarHorarios(
+            med.primeiroHorario || "08:00",
+            med.intervalo || 12
+          );
+
+          if (!horarios.includes(horaAtual)) {
+            return;
+          }
+
+          const chave =
+            notificacao-${hoje}-${med.id}-${horaAtual};
+
+          if (localStorage.getItem(chave)) {
+            return;
+          }
+
+          registro.showNotification(
+            "💊 Hora do remédio!",
+            {
+              body:
+                Está na hora de tomar: ${med.nome} +
+                (med.dose
+                  ? ` — ${med.dose}`
+                  : ""),
+              tag:
+                remedio-${med.id}-${horaAtual},
+            }
+          );
+
+          localStorage.setItem(
+            chave,
+            "enviada"
+          );
+        });
+      } catch (erro) {
+        console.error(
+          "Erro ao verificar notificações:",
+          erro
+        );
+      }
+    };
+
+    verificarHorarios();
+
+    const intervalo =
+      setInterval(
+        verificarHorarios,
+        30000
+      );
+
+    return () =>
+      clearInterval(intervalo);
+  }, [medicamentos]);
+ 
   function nomeUnidade(unidadeAtual, quantidade) {
     if (unidadeAtual === 'comprimidos') {
       return quantidade === 1
