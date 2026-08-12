@@ -416,3 +416,35 @@ input {
     font-size: 17px !important;
   }
 }
+/* Acessibilidade - letras maiores para idosos */
+html {
+  font-size: 18px;
+}
+
+body {
+  font-size: 18px;
+}
+
+input,
+select,
+textarea {
+  font-size: 18px !important;
+  min-height: 52px;
+}
+
+button {
+  font-size: 18px !important;
+  min-height: 48px;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 26px;
+}
+
+h3 {
+  font-size: 22px;
+}
