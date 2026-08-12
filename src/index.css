@@ -266,3 +266,30 @@ small {
     min-height: 52px;
   }
 }
+/* Ajustes para telas pequenas - celular */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2rem;
+    line-height: 1.15;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  input::placeholder {
+    font-size: 15px;
+  }
+
+  .container,
+  .card,
+  form {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
