@@ -1,23 +1,31 @@
 :root {
-  --text: #333333;
+  --text: #202124;
   --text-h: #111111;
-  --bg: #f5f7fb;
-  --border: #dddddd;
-  --code-bg: #f4f3ec;
-  --accent: #168bd1;
-  --accent-bg: #eef4ff;
-  --accent-border: #168bd1;
-  --social-bg: #ffffff;
+  --bg: #f2f6fb;
+  --card: #ffffff;
+  --border: #b8c2cc;
+
+  --accent: #126fc0;
+  --accent-dark: #0b5798;
+  --accent-bg: #e8f2fc;
+
+  --success-bg: #e4f6e8;
+  --success-text: #176b2c;
+
+  --warning-bg: #fff4cc;
+  --warning-text: #805900;
+
+  --danger-bg: #fde7e7;
+  --danger-text: #a31515;
+
   --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
-    rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    0 3px 10px rgba(0, 0, 0, 0.10);
 
   --sans: Arial, system-ui, "Segoe UI", Roboto, sans-serif;
-  --heading: Arial, system-ui, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
 
-  font: 16px/145% var(--sans);
-  letter-spacing: 0.18px;
+  font-family: var(--sans);
+  font-size: 20px;
+  line-height: 1.55;
   color: var(--text);
   background: var(--bg);
   color-scheme: light;
@@ -28,109 +36,383 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 html {
-  background: #f5f7fb;
+  background: var(--bg);
   color-scheme: light;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: #f5f7fb;
-  color: #333333;
+  min-width: 320px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 20px;
+  line-height: 1.55;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  min-height: 100svh;
-  box-sizing: border-box;
+button,
+input,
+select,
+textarea {
+  font-family: var(--sans);
+  font-size: 20px !important;
+}
+
+button {
+  min-height: 58px !important;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  min-height: 58px !important;
+  color: #202124 !important;
+  background: #ffffff !important;
+  border: 2px solid #9aa8b5 !important;
+  border-radius: 12px !important;
+  padding: 14px 16px !important;
+}
+
+input::placeholder {
+  color: #606870 !important;
+  opacity: 1;
+}
+
+select {
+  color: #202124 !important;
+}
+
+option {
+  color: #202124;
+  background: #ffffff;
+  font-size: 20px;
+}
+
+label {
+  display: block;
+  color: #202124 !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+p {
+  color: #202124 !important;
+  font-size: 20px !important;
+  line-height: 1.55;
+}
+
+strong {
+  color: #111111;
+}
+
+small {
+  color: #454b51 !important;
+  font-size: 17px !important;
+  line-height: 1.5;
 }
 
 h1,
 h2,
 h3 {
-  font-family: var(--heading);
-  color: #111111;
+  font-family: var(--sans);
+  color: var(--text-h);
+  line-height: 1.25;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
+  font-size: 38px !important;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 24px 0 14px !important;
 }
 
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
+  font-size: 28px !important;
+  font-weight: 800;
+  margin: 0 0 14px !important;
 }
 
 h3 {
-  font-size: 20px;
-  margin: 12px 0;
+  font-size: 23px !important;
+  font-weight: 800;
+  margin: 14px 0 !important;
 }
 
-p,
-label,
-strong,
-small {
-  color: #333333;
+/* Área principal */
+#root {
+  width: 100%;
+  max-width: 900px;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
 }
 
-input,
-select,
-button,
-textarea {
-  color-scheme: light;
+/* Espaçamento geral das seções */
+#root > div {
+  width: 100% !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 22px !important;
+  background: var(--bg) !important;
 }
 
-input,
-select {
-  color: #333333;
-  background: #ffffff;
+/* Cartões principais */
+#root > div > div {
+  border: 1px solid #d2dbe3 !important;
+  box-shadow: var(--shadow) !important;
 }
 
-input::placeholder {
-  color: #777777;
-  opacity: 1;
+/* Cartão de adicionar medicamento */
+#root > div > div:first-of-type {
+  margin-bottom: 28px !important;
 }
 
-select {
-  color: #333333;
+/* Campos do formulário */
+form {
+  width: 100%;
 }
 
-option {
-  color: #333333;
-  background: #ffffff;
+form input,
+form select {
+  width: 100% !important;
+  margin-bottom: 16px !important;
 }
 
+/* Botão principal */
+form button[type="submit"] {
+  width: 100% !important;
+  min-height: 62px !important;
+  padding: 16px 20px !important;
+  background: var(--accent) !important;
+  color: #ffffff !important;
+  border-radius: 14px !important;
+  font-size: 21px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.14);
+}
+
+form button[type="submit"]:active {
+  transform: scale(0.98);
+}
+
+/* Cartões dos medicamentos */
+#root > div > div {
+  background: var(--card) !important;
+}
+
+/* Nome do medicamento */
+#root h2 {
+  color: #111111;
+}
+
+/* Informações dentro dos cartões */
+#root > div > div p {
+  margin: 12px 0 !important;
+}
+
+/* Status do estoque */
+#root > div > div p[style*="background"] {
+  font-weight: 800 !important;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Cartões dos horários */
+#root div[style*="text-align: center"] h3 {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  margin: 4px 0 16px !important;
+}
+
+/* Botões TOMEI e ESQUECI */
 button {
-  -webkit-appearance: none;
-  appearance: none;
+  font-weight: 800 !important;
 }
 
-@media (max-width: 1024px) {
-  :root {
-    font-size: 16px;
+button[style*="168bd1"],
+button[style*="168bd1"] {
+  min-height: 60px !important;
+  font-size: 20px !important;
+}
+
+button[style*="d98c00"] {
+  min-height: 60px !important;
+  font-size: 20px !important;
+}
+
+/* Botões Editar e Excluir */
+button[style*="c62828"],
+button[style*="168bd1"] {
+  min-height: 58px !important;
+  font-size: 19px !important;
+}
+
+/* Resumo */
+#root > div > div h2 {
+  margin-bottom: 18px !important;
+}
+
+/* Números do resumo */
+#root div[style*="fontSize: 28px"],
+#root div[style*="font-size: 28px"] {
+  font-size: 34px !important;
+  font-weight: 800 !important;
+}
+
+/* Histórico */
+#root > div > div:last-child {
+  margin-bottom: 30px !important;
+}
+
+/* Áreas de informação */
+#root div[style*="borderRadius"] {
+  line-height: 1.55;
+}
+
+/* Foco para facilitar a navegação */
+input:focus,
+select:focus,
+button:focus,
+textarea:focus {
+  outline: 4px solid rgba(18, 111, 192, 0.25);
+  outline-offset: 2px;
+}
+
+/* Toque em celular */
+button,
+select,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Celulares */
+@media (max-width: 700px) {
+  :root,
+  body {
+    font-size: 19px;
+  }
+
+  #root > div {
+    padding: 16px !important;
   }
 
   h1 {
-    font-size: 36px;
-    margin: 20px 0;
+    font-size: 34px !important;
+    margin: 18px 0 12px !important;
   }
 
   h2 {
-    font-size: 20px;
+    font-size: 27px !important;
   }
 
   h3 {
-    font-size: 18px;
+    font-size: 22px !important;
   }
 
-  #root {
-    width: 100%;
+  p {
+    font-size: 19px !important;
+  }
+
+  label {
+    font-size: 19px !important;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 19px !important;
+  }
+
+  input,
+  select {
+    min-height: 60px !important;
+  }
+
+  button {
+    min-height: 60px !important;
+  }
+
+  form button[type="submit"] {
+    min-height: 64px !important;
+    font-size: 20px !important;
+  }
+
+  /* Os botões Tomei e Esqueci ficam grandes */
+  button[style*="168bd1"],
+  button[style*="d98c00"] {
+    min-height: 62px !important;
+    font-size: 19px !important;
+  }
+
+  /* Melhor espaço entre os botões */
+  div[style*="display: flex"] {
+    gap: 12px !important;
+  }
+}
+
+/* Celulares pequenos */
+@media (max-width: 430px) {
+  #root > div {
+    padding: 12px !important;
+  }
+
+  h1 {
+    font-size: 31px !important;
+  }
+
+  h2 {
+    font-size: 25px !important;
+  }
+
+  h3 {
+    font-size: 21px !important;
+  }
+
+  p {
+    font-size: 18px !important;
+  }
+
+  label {
+    font-size: 18px !important;
+  }
+
+  input,
+  select,
+  button {
+    font-size: 18px !important;
+  }
+
+  input,
+  select {
+    min-height: 58px !important;
+  }
+
+  button {
+    min-height: 58px !important;
+  }
+}
+
+/* Evita que o usuário tenha que enxergar textos muito pequenos */
+@media (max-width: 700px) {
+  small {
+    font-size: 17px !important;
   }
 }
