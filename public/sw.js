@@ -1,56 +1,25 @@
-name: Deploy to GitHub Pages
+self.addEventListener("install", () => {
+  self.skipWaiting();
+});
 
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ("focus" in client) {
+          return client.focus();
+        }
+      }
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
-      - name: Copiar Service Worker
-        run: cp sw.js dist/sw.js
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      if (clients.openWindow) {
+        return clients.openWindow("./");
+      }
+    })
+  );
+});
