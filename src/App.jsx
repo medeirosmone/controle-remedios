@@ -58,15 +58,16 @@ function calcularValidadeReceita(tipo, dataReceita) {
   if (!dataReceita) return ''
 
   if (tipo === 'posto') {
-    // Receita do posto: validade de 6 meses
     return adicionarMeses(dataReceita, 6)
   }
 
-  // Receita comum: validade de 1 mês
   return adicionarMeses(dataReceita, 1)
 }
 
-function calcularProximaRetirada(dataReceita, retiradas = []) {
+function calcularProximaRetirada(
+  dataReceita,
+  retiradas = []
+) {
   if (!dataReceita) return ''
 
   if (!retiradas || retiradas.length === 0) {
@@ -149,13 +150,6 @@ function App() {
   const [dataPrimeiraRetirada, setDataPrimeiraRetirada] =
     useState('')
 
-  /*
-    IMPORTANTE:
-    Só grava depois que o estado já foi carregado.
-    Assim evitamos substituir dados existentes
-    por uma lista vazia durante a inicialização.
-  */
-
   useEffect(() => {
     localStorage.setItem(
       'medicamentos',
@@ -169,99 +163,105 @@ function App() {
       JSON.stringify(historico)
     )
   }, [historico])
-useEffect(() => {
-    if (!("serviceWorker" in navigator)) return;
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
 
     navigator.serviceWorker
-      .register(${import.meta.env.BASE_URL}sw.js)
-      .catch((erro) => {
+      .register(`${import.meta.env.BASE_URL}sw.js`)
+      .catch(erro => {
         console.error(
-          "Erro ao registrar Service Worker:",
+          'Erro ao registrar Service Worker:',
           erro
-        );
-      });
-  }, []);
+        )
+      })
+  }, [])
 
   useEffect(() => {
     const verificarHorarios = async () => {
-      if (!("serviceWorker" in navigator)) return;
+      if (!('serviceWorker' in navigator)) return
 
       if (
-        !("Notification" in window) ||
-        Notification.permission !== "granted"
+        !('Notification' in window) ||
+        Notification.permission !== 'granted'
       ) {
-        return;
+        return
       }
 
       try {
         const registro =
-          await navigator.serviceWorker.ready;
+          await navigator.serviceWorker.ready
 
-        const agora = new Date();
+        const agora = new Date()
 
         const horaAtual =
-          String(agora.getHours()).padStart(2, "0") +
-          ":" +
-          String(agora.getMinutes()).padStart(2, "0");
+          String(agora.getHours()).padStart(2, '0') +
+          ':' +
+          String(agora.getMinutes()).padStart(2, '0')
 
-        const hoje = dataHoje();
+        const hoje = dataHoje()
 
-        medicamentos.forEach((med) => {
+        medicamentos.forEach(med => {
           const horarios = gerarHorarios(
-            med.primeiroHorario || "08:00",
+            med.primeiroHorario || '08:00',
             med.intervalo || 12
-          );
+          )
 
           if (!horarios.includes(horaAtual)) {
-            return;
+            return
           }
 
           const chave =
-            notificacao-${hoje}-${med.id}-${horaAtual};
+            `notificacao-${hoje}-${med.id}-${horaAtual}`
 
           if (localStorage.getItem(chave)) {
-            return;
+            return
           }
 
           registro.showNotification(
-            "💊 Hora do remédio!",
+            '💊 Hora do remédio!',
             {
               body:
-                Está na hora de tomar: ${med.nome} +
+                `Está na hora de tomar: ${med.nome}` +
                 (med.dose
                   ? ` — ${med.dose}`
-                  : ""),
+                  : ''),
               tag:
-                remedio-${med.id}-${horaAtual},
+                `remedio-${med.id}-${horaAtual}`,
             }
-          );
+          )
 
           localStorage.setItem(
             chave,
-            "enviada"
-          );
-        });
+            'enviada'
+          )
+        })
       } catch (erro) {
         console.error(
-          "Erro ao verificar notificações:",
+          'Erro ao verificar notificações:',
           erro
-        );
+        )
       }
-    };
+    }
 
-    verificarHorarios();
+    verificarHorarios()
 
-    const intervalo =
+    const intervaloNotificacao =
       setInterval(
         verificarHorarios,
         30000
-      );
+      )
 
     return () =>
-      clearInterval(intervalo);
-  }, [medicamentos]);
- 
-  function nomeUnidade(unidadeAtual, quantidade) {
+      clearInterval(
+        intervaloNotificacao
+      )
+  }, [medicamentos])
+
+  function nomeUnidade(
+    unidadeAtual,
+    quantidade
+  ) {
     if (unidadeAtual === 'comprimidos') {
       return quantidade === 1
         ? 'comprimido'
@@ -997,6 +997,12 @@ useEffect(() => {
         style={{
           textAlign:
             'center',
+          fontSize:
+            '30px',
+          fontWeight:
+            '700',
+          marginBottom:
+            '8px',
         }}
       >
         💊 Controle de Remédios
@@ -1006,9 +1012,18 @@ useEffect(() => {
         style={{
           textAlign:
             'center',
+          fontSize:
+            '20px',
+          fontWeight:
+            '500',
+          marginBottom:
+            '25px',
+          lineHeight:
+            '1.4',
         }}
       >
         Organize seus medicamentos
+        <br />
         e horários.
       </p>
 
@@ -1024,7 +1039,14 @@ useEffect(() => {
             '25px',
         }}
       >
-        <h2>
+        <h2
+          style={{
+            fontSize:
+              '26px',
+            marginTop:
+              '0',
+          }}
+        >
           Adicionar medicamento
         </h2>
 
@@ -1349,11 +1371,15 @@ useEffect(() => {
                     background:
                       '#e8f5e9',
                     padding:
-                      '12px',
+                      '15px',
                     borderRadius:
                       '10px',
                     marginBottom:
-                      '12px',
+                      '15px',
+                    fontSize:
+                      '18px',
+                    lineHeight:
+                      '1.6',
                   }}
                 >
                   <strong>
@@ -1402,7 +1428,12 @@ useEffect(() => {
 
                       <br />
 
-                      <small>
+                      <small
+                        style={{
+                          fontSize:
+                            '16px',
+                        }}
+                      >
                         A próxima retirada será calculada
                         1 mês após a retirada realizada.
                       </small>
@@ -1424,13 +1455,23 @@ useEffect(() => {
         </form>
       </div>
 
-      <h2>
+      <h2
+        style={{
+          fontSize:
+            '28px',
+        }}
+      >
         Meus medicamentos
       </h2>
 
       {medicamentos.length ===
         0 && (
-        <p>
+        <p
+          style={{
+            fontSize:
+              '18px',
+          }}
+        >
           Nenhum medicamento cadastrado.
         </p>
       )}
@@ -1484,18 +1525,33 @@ useEffect(() => {
                   '20px',
               }}
             >
-              <h2>
+              <h2
+                style={{
+                  fontSize:
+                    '26px',
+                }}
+              >
                 💊 {med.nome}
               </h2>
 
-              <p>
+              <p
+                style={{
+                  fontSize:
+                    '18px',
+                }}
+              >
                 <strong>
                   Dose:
                 </strong>{' '}
                 {med.dose}
               </p>
 
-              <p>
+              <p
+                style={{
+                  fontSize:
+                    '18px',
+                }}
+              >
                 📦{' '}
                 <strong>
                   Estoque:
@@ -1510,7 +1566,7 @@ useEffect(() => {
               <p
                 style={{
                   padding:
-                    '10px',
+                    '12px',
                   borderRadius:
                     '8px',
                   background:
@@ -1521,12 +1577,21 @@ useEffect(() => {
                         'estoque-baixo'
                       ? '#fff3cd'
                       : '#f8d7da',
+                  fontSize:
+                    '18px',
+                  fontWeight:
+                    'bold',
                 }}
               >
                 {status.texto}
               </p>
 
-              <p>
+              <p
+                style={{
+                  fontSize:
+                    '18px',
+                }}
+              >
                 💊{' '}
                 {
                   med.quantidadePorTomada
@@ -1538,7 +1603,12 @@ useEffect(() => {
                 por tomada
               </p>
 
-              <p>
+              <p
+                style={{
+                  fontSize:
+                    '18px',
+                }}
+              >
                 🔄 A cada{' '}
                 {med.intervalo}{' '}
                 horas
@@ -1555,9 +1625,18 @@ useEffect(() => {
                       '10px',
                     marginTop:
                       '15px',
+                    fontSize:
+                      '18px',
+                    lineHeight:
+                      '1.5',
                   }}
                 >
-                  <h3>
+                  <h3
+                    style={{
+                      fontSize:
+                        '22px',
+                    }}
+                  >
                     🧾 Receita
                   </h3>
 
@@ -1685,6 +1764,8 @@ useEffect(() => {
                       '10px',
                     background:
                       '#fff3cd',
+                    fontSize:
+                      '18px',
                   }}
                 >
                   ⚠️ Este medicamento foi esquecido{' '}
@@ -1739,7 +1820,14 @@ useEffect(() => {
                           'center',
                       }}
                     >
-                      <h3>
+                      <h3
+                        style={{
+                          fontSize:
+                            '24px',
+                          margin:
+                            '5px 0 15px',
+                        }}
+                      >
                         ⏰{' '}
                         {horario}
                       </h3>
@@ -1775,7 +1863,9 @@ useEffect(() => {
                               color:
                                 'white',
                               fontSize:
-                                '17px',
+                                '18px',
+                              fontWeight:
+                                'bold',
                               cursor:
                                 'pointer',
                             }}
@@ -1805,7 +1895,9 @@ useEffect(() => {
                               color:
                                 'white',
                               fontSize:
-                                '17px',
+                                '18px',
+                              fontWeight:
+                                'bold',
                               cursor:
                                 'pointer',
                             }}
@@ -1822,6 +1914,8 @@ useEffect(() => {
                               '#168238',
                             fontWeight:
                               'bold',
+                            fontSize:
+                              '18px',
                           }}
                         >
                           ✓ Medicamento tomado hoje
@@ -1835,6 +1929,8 @@ useEffect(() => {
                               '#a66a00',
                             fontWeight:
                               'bold',
+                            fontSize:
+                              '18px',
                           }}
                         >
                           ⚠️ Dose esquecida
@@ -1910,7 +2006,12 @@ useEffect(() => {
             '15px',
         }}
       >
-        <h2>
+        <h2
+          style={{
+            fontSize:
+              '28px',
+          }}
+        >
           📊 Resumo de acompanhamento
         </h2>
 
@@ -1950,7 +2051,12 @@ useEffect(() => {
             >
               {totalTomadas}
             </div>
-            <div>
+            <div
+              style={{
+                fontSize:
+                  '18px',
+              }}
+            >
               💊 Doses tomadas
             </div>
           </div>
@@ -1979,7 +2085,12 @@ useEffect(() => {
             >
               {totalEsquecimentos}
             </div>
-            <div>
+            <div
+              style={{
+                fontSize:
+                  '18px',
+              }}
+            >
               ⚠️ Doses esquecidas
             </div>
           </div>
@@ -2008,7 +2119,12 @@ useEffect(() => {
             >
               {totalDosesRegistradas}
             </div>
-            <div>
+            <div
+              style={{
+                fontSize:
+                  '18px',
+              }}
+            >
               📋 Total registrado
             </div>
           </div>
@@ -2037,7 +2153,12 @@ useEffect(() => {
             >
               {taxaEsquecimento}%
             </div>
-            <div>
+            <div
+              style={{
+                fontSize:
+                  '18px',
+              }}
+            >
               📈 Taxa de esquecimento
             </div>
           </div>
@@ -2053,6 +2174,8 @@ useEffect(() => {
                 '#168238',
               fontWeight:
                 'bold',
+              fontSize:
+                '18px',
             }}
           >
             ✓ Nenhuma dose esquecida registrada.
@@ -2069,6 +2192,8 @@ useEffect(() => {
                   '10px',
                 marginTop:
                   '15px',
+                fontSize:
+                  '18px',
               }}
             >
               💊{' '}
@@ -2095,6 +2220,8 @@ useEffect(() => {
                   '10px',
                 marginTop:
                   '10px',
+                fontSize:
+                  '18px',
               }}
             >
               ⏰{' '}
@@ -2115,6 +2242,8 @@ useEffect(() => {
               style={{
                 marginTop:
                   '20px',
+                fontSize:
+                  '22px',
               }}
             >
               ⚠️ Esquecimentos por medicamento
@@ -2148,6 +2277,8 @@ useEffect(() => {
                         '10px',
                       marginTop:
                         '10px',
+                      fontSize:
+                        '18px',
                     }}
                   >
                     💊{' '}
@@ -2181,7 +2312,12 @@ useEffect(() => {
             '15px',
         }}
       >
-        <h2>
+        <h2
+          style={{
+            fontSize:
+              '28px',
+          }}
+        >
           📜 Histórico
         </h2>
 
@@ -2191,6 +2327,8 @@ useEffect(() => {
             style={{
               color:
                 '#777',
+              fontSize:
+                '18px',
             }}
           >
             Nenhum registro ainda.
@@ -2214,6 +2352,10 @@ useEffect(() => {
                     '12px',
                   marginTop:
                     '10px',
+                  fontSize:
+                    '18px',
+                  lineHeight:
+                    '1.5',
                 }}
               >
                 💊{' '}
@@ -2295,15 +2437,17 @@ const estiloInput = {
   boxSizing:
     'border-box',
   padding:
-    '14px',
+    '15px',
   marginBottom:
-    '12px',
+    '14px',
   borderRadius:
     '8px',
   border:
-    '1px solid #bbb',
+    '1px solid #999',
   fontSize:
-    '16px',
+    '18px',
+  minHeight:
+    '52px',
 }
 
 const estiloLabel = {
@@ -2312,7 +2456,9 @@ const estiloLabel = {
   fontWeight:
     'bold',
   marginBottom:
-    '6px',
+    '7px',
+  fontSize:
+    '18px',
 }
 
 const estiloBotao = {
@@ -2330,6 +2476,10 @@ const estiloBotao = {
     'white',
   fontSize:
     '18px',
+  fontWeight:
+    'bold',
+  minHeight:
+    '52px',
   cursor:
     'pointer',
 }
@@ -2338,7 +2488,7 @@ const botaoSecundario = {
   flex:
     1,
   padding:
-    '12px',
+    '14px',
   border:
     'none',
   borderRadius:
@@ -2346,7 +2496,11 @@ const botaoSecundario = {
   cursor:
     'pointer',
   fontSize:
-    '16px',
+    '18px',
+  fontWeight:
+    'bold',
+  minHeight:
+    '52px',
 }
 
 export default App
