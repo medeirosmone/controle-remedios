@@ -1169,6 +1169,8 @@ function App() {
               estiloInput
             }
           />
+<label>Quantidade por tomada</label>
+
 
           <input
             type="number"
