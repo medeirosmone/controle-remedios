@@ -112,7 +112,11 @@ function App() {
       return []
     }
   })
+const USUARIOS = ['Simone', 'Carlos', 'Sônia'];
 
+const [usuarioAtual, setUsuarioAtual] = useState(() => {
+  return localStorage.getItem('usuarioAtual') || '';
+});
   const [historico, setHistorico] = useState(() => {
     const salvo = localStorage.getItem('historico')
 
